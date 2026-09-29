@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 橱柜方案助手</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main>
+    <section class="intro"><p class="eyebrow">Cabinet AI</p><h1>橱柜方案助手</h1><p>输入厨房尺寸和偏好，生成可复尺确认的初步方案。</p></section>
+    <section class="panel">
+      <form id="design-form">
+        <label>布局类型<select name="layoutType"><option value="STRAIGHT">一字型</option><option value="L_SHAPED">L型</option><option value="U_SHAPED">U型</option></select></label>
+        <label>A墙长度 (mm)<input name="wallAmm" type="number" value="3200" min="1800" required></label>
+        <label>B墙长度 (mm)<input name="wallBmm" type="number" value="2400" min="0" required></label>
+        <label>C墙长度 (mm)<input name="wallCmm" type="number" value="2000" min="0" required></label>
+        <label>预算 (元)<input name="budget" type="number" value="20000" min="5000" required></label>
+        <label>风格<input name="style" value="现代简约"></label>
+        <button type="submit">生成初步方案</button>
+      </form>
+    </section>
+    <section id="result" class="panel result" hidden></section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
