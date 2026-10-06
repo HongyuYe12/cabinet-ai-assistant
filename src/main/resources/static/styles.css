@@ -11,5 +11,7 @@ label { display: grid; gap: 6px; font-weight: 600; }
 input, select, button { min-height: 40px; border: 1px solid #94a3b8; border-radius: 4px; padding: 8px; font: inherit; }
 button { grid-column: 1 / -1; background: #0f766e; color: #fff; cursor: pointer; border: 0; font-weight: 700; }
 button:hover { background: #115e59; }
+.secondary { background: #334155; }
+.secondary:hover { background: #1e293b; }
 .result h2 { margin-top: 0; }
 @media (max-width: 640px) { main { margin: 24px auto; } form { grid-template-columns: 1fr; } }

@@ -32,6 +32,7 @@
         </dependency>
     </dependencies>
     <build>
+        <directory>${project.basedir}/target-run</directory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

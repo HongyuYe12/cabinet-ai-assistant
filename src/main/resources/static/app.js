@@ -1,11 +1,12 @@
 const form = document.querySelector('#design-form');
 const result = document.querySelector('#result');
+const aiResult = document.querySelector('#ai-result');
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(form));
   ['wallAmm', 'wallBmm', 'wallCmm', 'budget'].forEach((key) => data[key] = Number(data[key]));
-  data.needs = [];
+  data.needs = applianceNeeds(data);
   result.hidden = false;
   result.textContent = '正在生成方案...';
   try {
@@ -17,3 +18,23 @@ form.addEventListener('submit', async (event) => {
     result.textContent = '生成失败，请确认服务已启动。';
   }
 });
+
+document.querySelector('#ai-button').addEventListener('click', async () => {
+  const data = Object.fromEntries(new FormData(form));
+  ['wallAmm', 'wallBmm', 'wallCmm', 'budget'].forEach((key) => data[key] = Number(data[key]));
+  data.needs = applianceNeeds(data);
+  aiResult.hidden = false;
+  aiResult.textContent = '正在请求 AI 建议...';
+  try {
+    const response = await fetch('/api/ai/design', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.message || 'AI 请求失败');
+    aiResult.innerHTML = `<h2>AI设计建议</h2><p>${payload.recommendation || ''}</p><p>${payload.layoutAdvice || ''}</p><h3>注意事项</h3><ul>${(payload.warnings || []).map(item => `<li>${item}</li>`).join('')}</ul>`;
+  } catch (error) { aiResult.textContent = error.message; }
+});
+document.querySelector('#cad-form').addEventListener('submit',async(e)=>{e.preventDefault();const s=document.querySelector('#cad-status');s.textContent='正在解析DXF...';try{const r=await fetch('/api/cad/design',{method:'POST',body:new FormData(e.target)});if(!r.ok)throw new Error(await r.text());const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download='designed-kitchen.dxf';a.click();URL.revokeObjectURL(u);s.textContent='已下载 designed-kitchen.dxf';}catch(x){s.textContent='CAD生成失败：'+x.message;}});
+
+function applianceNeeds(data) {
+  return [['洗碗机', data.dishwasher], ['烤箱', data.oven], ['蒸箱', data.steamOven], ['冰箱', data.refrigerator], ['油烟机', data.hood]]
+    .filter(([, size]) => size && size.trim()).map(([name, size]) => `${name}尺寸：${size}`);
+}

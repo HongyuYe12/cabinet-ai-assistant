@@ -1,4 +1,5 @@
 target/
+target-run/
 .m2/
 .vscode/*.log
 .idea/

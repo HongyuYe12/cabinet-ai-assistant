@@ -42,3 +42,17 @@ mvn spring-boot:run
 ## 发布到 GitHub Pages
 
 `docs` 目录是无需 Spring Boot 的静态演示版，已包含本地方案计算逻辑。将项目上传到 GitHub 仓库的 `main` 分支后，Actions 会自动发布；在仓库 Settings → Pages 中将 Source 设为 GitHub Actions。
+
+## 配置 AI API
+
+后端新增 `POST /api/ai/design`，兼容 OpenAI Chat Completions 格式。不要把密钥写入网页或 GitHub：
+
+```powershell
+$env:AI_API_KEY="你的API密钥"
+$env:AI_MODEL="gpt-4o-mini"
+mvn spring-boot:run
+```
+
+可通过 `AI_API_URL` 指向其他兼容接口。未配置密钥时，原有本地规则方案仍可使用。
+
+也可以在项目根目录运行 `run-with-ai.ps1`。它会隐藏输入 API Key，自动设置 `gpt-4o-mini` 并启动 8081 端口；密钥只在当前进程中存在，不会写入项目。
