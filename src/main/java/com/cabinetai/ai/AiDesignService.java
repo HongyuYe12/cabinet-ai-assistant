@@ -36,7 +36,7 @@ public class AiDesignService {
         }
         try {
             String prompt = "你是橱柜设计顾问。请根据输入给出可执行的初步建议，只返回JSON，不要Markdown。"
-                    + "字段必须为 recommendation(string), layoutAdvice(string), warnings(array of string)。"
+                    + "字段必须为 recommendation(string), layoutAdvice(string), warnings(array of string), placements(array)。placements每项包含 name,widthMm,depthMm,xMm,yMm,rotationDeg。"
                     + "不要编造SKU或价格，尺寸仅作建议，必须提醒复尺。输入：" + mapper.writeValueAsString(request);
             Map<String, Object> body = Map.of("model", model, "temperature", 0.2,
                     "messages", new Object[] { Map.of("role", "system", "content", "输出严格JSON。"),

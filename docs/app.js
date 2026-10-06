@@ -48,6 +48,7 @@ async function generateFinalCad() {
     const body = new FormData();
     body.append('file', file);
     body.append('cabinetDepthMm', '600');
+    body.append('plan', JSON.stringify(latestAiPayload || {}));
     const response = await fetch('/api/cad/design', { method: 'POST', body });
     if (!response.ok) throw new Error(await response.text());
     const url = URL.createObjectURL(await response.blob());
