@@ -34,7 +34,6 @@ document.querySelector('#ai-button').addEventListener('click', async () => {
     aiResult.innerHTML = `<h2>AI设计建议</h2><p>${payload.recommendation || ''}</p><p>${payload.layoutAdvice || ''}</p><h3>注意事项</h3><ul>${(payload.warnings || []).map(item => `<li>${item}</li>`).join('')}</ul>`;
   } catch (error) { aiResult.textContent = error.message; }
 });
-document.querySelector('#cad-form').addEventListener('submit',async(e)=>{e.preventDefault();const s=document.querySelector('#cad-status');s.textContent='正在解析DXF...';try{const r=await fetch('/api/cad/design',{method:'POST',body:new FormData(e.target)});if(!r.ok)throw new Error(await r.text());const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download='designed-kitchen.dxf';a.click();URL.revokeObjectURL(u);s.textContent='已下载 designed-kitchen.dxf';}catch(x){s.textContent='CAD生成失败：'+x.message;}});
 
 function applianceNeeds(data) {
   return [['洗碗机', data.dishwasher], ['烤箱', data.oven], ['蒸箱', data.steamOven], ['冰箱', data.refrigerator], ['油烟机', data.hood]]
