@@ -16,8 +16,8 @@ document.querySelector('#ai-button').addEventListener('click', async () => {
     body.append('needs', data.needs.join(';'));
     body.append('cadFile', form.elements.cadFile.files[0]);
     const response = await fetch('/api/ai/design', { method: 'POST', body });
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.message || 'AI 请求失败');
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.message || (response.status === 413 ? 'DXF 文件超过 50MB 上传限制' : 'AI 请求失败'));
     latestAiPayload = payload;
     aiResult.innerHTML = `<h2>AI设计建议</h2><p>${payload.recommendation || ''}</p><p>${payload.layoutAdvice || ''}</p><h3>注意事项</h3><ul>${(payload.warnings || []).map(item => `<li>${item}</li>`).join('')}</ul><button type="button" id="cad-button">确认建议并生成最终CAD</button>`;
     document.querySelector('#cad-button').addEventListener('click', generateFinalCad);
