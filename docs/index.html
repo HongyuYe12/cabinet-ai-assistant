@@ -11,17 +11,16 @@
     <section class="intro"><p class="eyebrow">Cabinet AI</p><h1>橱柜方案助手</h1><p>输入厨房尺寸和偏好，生成可复尺确认的初步方案。</p></section>
     <section class="panel">
       <form id="design-form">
-        <label>布局类型<select name="layoutType"><option value="STRAIGHT">一字型</option><option value="L_SHAPED">L型</option><option value="U_SHAPED">U型</option></select></label>
-        <label>A墙长度 (mm)<input name="wallAmm" type="number" value="3200" min="1800" required></label>
-        <label>B墙长度 (mm)<input name="wallBmm" type="number" value="2400" min="0" required></label>
-        <label>C墙长度 (mm)<input name="wallCmm" type="number" value="2000" min="0" required></label>
         <label>预算 (元)<input name="budget" type="number" value="20000" min="5000" required></label>
         <label>风格<input name="style" value="现代简约"></label>
-        <label>洗碗机尺寸(mm)<input name="dishwasher" placeholder="600x600x820"></label>
-        <label>烤箱尺寸(mm)<input name="oven" placeholder="600x600x600"></label>
-        <label>蒸箱尺寸(mm)<input name="steamOven" placeholder="600x600x450"></label>
-        <label>冰箱尺寸(mm)<input name="refrigerator" placeholder="900x700x1900"></label>
-        <label>油烟机尺寸(mm)<input name="hood" placeholder="900x500x500"></label>
+        <label class="wide">厨房DXF图纸<input name="cadFile" type="file" accept=".dxf" required></label>
+        <fieldset class="wide"><legend>需要的电器（勾选后填写尺寸）</legend>
+          <label class="check"><input type="checkbox" data-appliance="dishwasher"> 洗碗机</label><input class="appliance-size" data-for="dishwasher" name="dishwasher" placeholder="宽×深×高(mm)" hidden>
+          <label class="check"><input type="checkbox" data-appliance="oven"> 烤箱</label><input class="appliance-size" data-for="oven" name="oven" placeholder="宽×深×高(mm)" hidden>
+          <label class="check"><input type="checkbox" data-appliance="steamOven"> 蒸箱</label><input class="appliance-size" data-for="steamOven" name="steamOven" placeholder="宽×深×高(mm)" hidden>
+          <label class="check"><input type="checkbox" data-appliance="refrigerator"> 冰箱</label><input class="appliance-size" data-for="refrigerator" name="refrigerator" placeholder="宽×深×高(mm)" hidden>
+          <label class="check"><input type="checkbox" data-appliance="hood"> 油烟机</label><input class="appliance-size" data-for="hood" name="hood" placeholder="宽×深×高(mm)" hidden>
+        </fieldset>
         <button type="submit">生成初步方案</button>
         <button type="button" id="ai-button" class="secondary">AI设计建议</button>
       </form>

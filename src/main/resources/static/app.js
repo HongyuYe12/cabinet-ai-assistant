@@ -5,7 +5,8 @@ const aiResult = document.querySelector('#ai-result');
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(form));
-  ['wallAmm', 'wallBmm', 'wallCmm', 'budget'].forEach((key) => data[key] = Number(data[key]));
+  data.budget = Number(data.budget);
+  data.layoutType = 'STRAIGHT'; data.wallAmm = 3200; data.wallBmm = 0; data.wallCmm = 0;
   data.needs = applianceNeeds(data);
   result.hidden = false;
   result.textContent = '正在生成方案...';
@@ -21,7 +22,8 @@ form.addEventListener('submit', async (event) => {
 
 document.querySelector('#ai-button').addEventListener('click', async () => {
   const data = Object.fromEntries(new FormData(form));
-  ['wallAmm', 'wallBmm', 'wallCmm', 'budget'].forEach((key) => data[key] = Number(data[key]));
+  data.budget = Number(data.budget);
+  data.layoutType = 'STRAIGHT'; data.wallAmm = 3200; data.wallBmm = 0; data.wallCmm = 0;
   data.needs = applianceNeeds(data);
   aiResult.hidden = false;
   aiResult.textContent = '正在请求 AI 建议...';
@@ -38,3 +40,9 @@ function applianceNeeds(data) {
   return [['洗碗机', data.dishwasher], ['烤箱', data.oven], ['蒸箱', data.steamOven], ['冰箱', data.refrigerator], ['油烟机', data.hood]]
     .filter(([, size]) => size && size.trim()).map(([name, size]) => `${name}尺寸：${size}`);
 }
+
+document.querySelectorAll('[data-appliance]').forEach((box) => box.addEventListener('change', () => {
+  const input = document.querySelector(`[data-for="${box.dataset.appliance}"]`);
+  input.hidden = !box.checked;
+  if (!box.checked) input.value = '';
+}));
