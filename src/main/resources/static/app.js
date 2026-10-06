@@ -6,12 +6,16 @@ let latestAiPayload = null;
 document.querySelector('#ai-button').addEventListener('click', async () => {
   const data = Object.fromEntries(new FormData(form));
   data.budget = Number(data.budget);
-  data.layoutType = 'STRAIGHT'; data.wallAmm = 3200; data.wallBmm = 0; data.wallCmm = 0;
   data.needs = applianceNeeds(data);
   aiResult.hidden = false;
   aiResult.textContent = '正在请求 AI 建议...';
   try {
-    const response = await fetch('/api/ai/design', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    const body = new FormData();
+    body.append('budget', String(data.budget));
+    body.append('style', data.style || '');
+    body.append('needs', data.needs.join(';'));
+    body.append('cadFile', form.elements.cadFile.files[0]);
+    const response = await fetch('/api/ai/design', { method: 'POST', body });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.message || 'AI 请求失败');
     latestAiPayload = payload;

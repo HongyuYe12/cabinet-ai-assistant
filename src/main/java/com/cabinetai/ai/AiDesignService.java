@@ -29,15 +29,17 @@ public class AiDesignService {
         this.model = model;
     }
 
-    public JsonNode recommend(DesignRequest request) {
+    public JsonNode recommend(DesignRequest request, String dxf) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "未配置 AI_API_KEY。请先设置环境变量后重启服务。");
         }
         try {
-            String prompt = "你是橱柜设计顾问。请根据输入给出可执行的初步建议，只返回JSON，不要Markdown。"
+            String prompt = "你是橱柜设计顾问和CAD布局规划器。请根据预算、风格、电器需求和DXF墙体图纸给出可执行的设计建议，只返回JSON，不要Markdown。"
                     + "字段必须为 recommendation(string), layoutAdvice(string), warnings(array of string), placements(array)。placements每项包含 name,widthMm,depthMm,xMm,yMm,rotationDeg。"
-                    + "不要编造SKU或价格，尺寸仅作建议，必须提醒复尺。输入：" + mapper.writeValueAsString(request);
+                    + "DXF中的LINE实体、坐标和毫米尺寸是墙体布局的唯一依据，必须严格沿墙布置，不能假设一字型、L型、U型或任何固定布局，也不能使用A墙/B墙/C墙命名。"
+                    + "不得改变墙体尺寸，不得把柜体或电器放到墙体外；异形或信息不足时在warnings中说明。电器只使用用户勾选并提供的尺寸，不得擅自增加未选择的电器。placements坐标以DXF坐标系为准。"
+                    + "输入参数：" + mapper.writeValueAsString(request) + "；DXF原文：" + dxf;
             Map<String, Object> body = Map.of("model", model, "temperature", 0.2,
                     "messages", new Object[] { Map.of("role", "system", "content", "输出严格JSON。"),
                             Map.of("role", "user", "content", prompt) });
