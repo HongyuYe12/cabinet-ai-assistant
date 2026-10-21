@@ -2,6 +2,7 @@ const form = document.querySelector('#design-form');
 const aiResult = document.querySelector('#ai-result');
 const cadResult = document.querySelector('#cad-result');
 let latestAiPayload = null;
+const apiBase = (window.CABINET_API_BASE || '').replace(/\/$/, '');
 
 document.querySelector('#ai-button').addEventListener('click', async () => {
   const data = Object.fromEntries(new FormData(form));
@@ -15,7 +16,7 @@ document.querySelector('#ai-button').addEventListener('click', async () => {
     body.append('style', data.style || '');
     body.append('needs', data.needs.join(';'));
     body.append('cadFile', form.elements.cadFile.files[0]);
-    const response = await fetch('/api/ai/design', { method: 'POST', body });
+    const response = await fetch(`${apiBase}/api/ai/design`, { method: 'POST', body });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(payload.message || (response.status === 413 ? 'DXF 文件超过 50MB 上传限制' : 'AI 请求失败'));
     latestAiPayload = payload;
@@ -34,7 +35,7 @@ async function generateFinalCad() {
     body.append('file', file);
     body.append('cabinetDepthMm', '600');
     body.append('plan', JSON.stringify(latestAiPayload || {}));
-    const response = await fetch('/api/cad/design', { method: 'POST', body });
+    const response = await fetch(`${apiBase}/api/cad/design`, { method: 'POST', body });
     if (!response.ok) throw new Error(await response.text());
     const url = URL.createObjectURL(await response.blob());
     const link = document.createElement('a');

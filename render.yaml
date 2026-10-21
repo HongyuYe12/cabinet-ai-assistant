@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: cabinet-ai-assistant
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: AI_API_URL
+        value: https://console.mirrorcoding.xyz/v1/chat/completions
+      - key: AI_MODEL
+        value: gpt-5.2
+      - key: AI_API_KEY
+        sync: false
+      - key: CORS_ALLOWED_ORIGIN
+        value: https://hongyuye12.github.io
