@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 橱柜方案助手</title>
+  <title>Cabinet Vision AI</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header class="topbar"><div class="brand-mark">CV</div><div><strong>Cabinet Vision AI</strong><span>橱柜设计与视觉分析平台</span></div></header>
   <main>
-    <section class="intro"><p class="eyebrow">Cabinet AI</p><h1>橱柜方案助手</h1><p>上传 DXF 墙体图纸，结合预算、风格和电器需求生成 AI 方案及最终 CAD。</p></section>
+    <section class="intro"><p class="eyebrow">DESIGN + VISION WORKSPACE</p><h1>从图纸理解到施工核验</h1><p>一个网页完成大模型橱柜设计、户型图视觉分析、CAD 结构解析和效果图施工匹配。</p></section>
+    <nav class="workspace-nav" aria-label="工作区切换"><button class="nav-button active" data-target="design-workspace">AI 橱柜设计</button><button class="nav-button" data-target="vision-workspace">视觉分析实验室</button></nav>
+    <div id="design-workspace" class="workspace active">
     <section class="panel">
+      <div class="section-heading"><span>01</span><div><h2>生成橱柜设计方案</h2><p>DXF 墙体 + 预算 + 风格 + 电器尺寸</p></div></div>
       <form id="design-form">
         <label>预算 (元)<input name="budget" type="number" value="20000" min="5000" required></label>
         <label>风格<input name="style" value="现代简约"></label>
@@ -26,6 +30,16 @@
     </section>
     <section id="ai-result" class="panel result" hidden></section>
     <section id="cad-result" class="panel result" hidden></section>
+    </div>
+
+    <div id="vision-workspace" class="workspace">
+      <section class="vision-intro panel"><div><p class="eyebrow">COMPUTER VISION MVP</p><h2>三个可运行的视觉分析模块</h2><p>当前采用本地启发式视觉算法，适合原型验证和简历演示。结果均提供量化指标与可视化输出。</p></div><span class="status-badge">无需额外 API</span></section>
+      <div class="module-grid">
+        <article class="module-card"><div class="module-index">01</div><h2>户型图区域分割</h2><p>分析墙体、门窗细线候选与封闭房间区域，生成彩色标注图。</p><form id="floorplan-form" class="tool-form"><label>户型图图片<input name="file" type="file" accept="image/png,image/jpeg" required></label><button type="submit">开始分割分析</button></form><div id="floorplan-result" class="tool-result" hidden></div></article>
+        <article class="module-card"><div class="module-index">02</div><h2>CAD 图纸结构解析</h2><p>解析 ASCII DXF 的图层、图元类型、数量和整体坐标范围。</p><form id="cad-structure-form" class="tool-form"><label>DXF 图纸<input name="file" type="file" accept=".dxf" required></label><button type="submit">解析图纸结构</button></form><div id="cad-structure-result" class="tool-result" hidden></div></article>
+        <article class="module-card"><div class="module-index">03</div><h2>效果图与施工匹配</h2><p>自动进行平移对齐，输出相似度、变化面积和差异热力图。</p><form id="match-form" class="tool-form"><label>设计效果图<input name="reference" type="file" accept="image/png,image/jpeg" required></label><label>施工结果图<input name="actual" type="file" accept="image/png,image/jpeg" required></label><button type="submit">开始视觉匹配</button></form><div id="match-result" class="tool-result" hidden></div></article>
+      </div>
+    </div>
   </main>
   <script src="config.js"></script>
   <script src="app.js"></script>

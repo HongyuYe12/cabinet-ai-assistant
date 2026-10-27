@@ -1,58 +1,34 @@
-# AI 橱柜方案助手
+# Cabinet Vision AI
 
-一个适合个人项目演示的 Java 初始架构。它以规则引擎组合标准柜体，生成一字型、L 型、U 型厨房的初步柜体清单、预算和复尺提醒。
+Java 21 + Spring Boot 橱柜设计与视觉分析个人项目。网页包括两个工作区：
 
-## 在 VS Code 中运行
+- 大模型橱柜设计：上传 DXF 墙体图纸，结合预算、风格和电器尺寸生成建议与最终 DXF。
+- 视觉分析实验室：户型图区域分割、DXF 结构解析、效果图与施工结果匹配。
 
-1. 用 VS Code 打开此文件夹。
-2. 安装推荐的 `Extension Pack for Java` 扩展。
-3. 在终端执行：
-
-```powershell
-mvn spring-boot:run
-```
-
-4. 浏览器访问 `http://localhost:8080`。
-
-也可以从 VS Code 的“运行任务”执行 `Run Cabinet AI Assistant`。
-
-## API 示例
-
-`POST /api/designs/generate`
-
-```json
-{
-  "layoutType": "L_SHAPED",
-  "wallAmm": 3200,
-  "wallBmm": 2400,
-  "wallCmm": 0,
-  "budget": 20000,
-  "style": "现代简约",
-  "needs": ["dishwasher"]
-}
-```
-
-## 后续扩展
-
-- 将 `CabinetCatalog` 替换为 SQLite/MySQL 产品库。
-- 增加门窗、水电、燃气点位等户型约束。
-- 接入效果图模型或在获得授权后接入三维家方案/渲染数据。
-- 在审核后导出 BOM、报价单和客户方案页。
-
-## 发布到 GitHub Pages
-
-`docs` 目录是无需 Spring Boot 的静态演示版，已包含本地方案计算逻辑。将项目上传到 GitHub 仓库的 `main` 分支后，Actions 会自动发布；在仓库 Settings → Pages 中将 Source 设为 GitHub Actions。
-
-## 配置 AI API
-
-后端新增 `POST /api/ai/design`，兼容 OpenAI Chat Completions 格式。不要把密钥写入网页或 GitHub：
+## 本地运行
 
 ```powershell
-$env:AI_API_KEY="你的API密钥"
-$env:AI_MODEL="gpt-4o-mini"
-mvn spring-boot:run
+powershell -ExecutionPolicy Bypass -File .\run-with-ai.ps1
 ```
 
-可通过 `AI_API_URL` 指向其他兼容接口。未配置密钥时，原有本地规则方案仍可使用。
+访问 `http://localhost:8081`。API Key 通过启动脚本输入，不写入代码。
 
-也可以在项目根目录运行 `run-with-ai.ps1`。它会隐藏输入 API Key，自动设置 `gpt-4o-mini` 并启动 8081 端口；密钥只在当前进程中存在，不会写入项目。
+## 视觉分析接口
+
+- `POST /api/vision/floorplan`：上传 PNG/JPG 户型图，返回墙体候选、门窗细线候选、封闭房间区域指标与标注图。
+- `POST /api/vision/cad-structure`：上传 ASCII DXF，返回图层、图元类型、数量和坐标范围。
+- `POST /api/vision/match`：上传效果图与施工图，返回平移对齐、相似度、变化面积和差异热力图。
+
+图像模块当前采用本地 Java 启发式算法，适合 MVP 验证与流程演示，不冒充训练完成的语义分割模型。后续可在不改变网页调用方式的前提下替换为 ONNX/OpenCV 推理服务。
+
+## 云端部署
+
+- `docs/` 由 GitHub Actions 发布到 GitHub Pages。
+- Spring Boot 后端通过 `Dockerfile` 和 `render.yaml` 部署到 Render。
+- `AI_API_KEY` 仅保存在 Render 环境变量中。
+
+## 编译验证
+
+```powershell
+mvn -q -DskipTests package
+```
